@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="poc-sql-db.sqlproj">
-    <Build />
-    <Deploy />
-  </Project>
-</Solution>
