@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="poc.azure.function.app/poc.azure.function.app.csproj" />
+  <Project Path="poc.azure.function.test/poc.azure.function.test.csproj" />
+</Solution>
