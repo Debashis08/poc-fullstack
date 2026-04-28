@@ -3,18 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace poc_azure_fuctions;
+namespace poc.azure.function.app.functions;
 
-public class Function1
+public class I0001_1_CustomerLogin
 {
-    private readonly ILogger<Function1> _logger;
+    private readonly ILogger<I0001_1_CustomerLogin> _logger;
 
-    public Function1(ILogger<Function1> logger)
+    public I0001_1_CustomerLogin(ILogger<I0001_1_CustomerLogin> logger)
     {
         _logger = logger;
     }
 
-    [Function("Function1")]
+    [Function("I0001_1_CustomerLogin")]
     public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
