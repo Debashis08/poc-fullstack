@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "poc_azure_fuctions": {
+    "poc_azure_function_app": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7093",
+      "commandLineArgs": "--port 7254",
       "launchBrowser": false
     }
   }
