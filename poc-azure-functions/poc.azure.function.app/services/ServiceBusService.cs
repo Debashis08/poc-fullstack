@@ -1,35 +1,38 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using Azure.Storage.Queues;
 using Microsoft.Extensions.Azure;
+using System.Text.Json;
 
 namespace poc.azure.function.app.Services;
 
 public class ServiceBusService : IServiceBusService
 {
-    private readonly IAzureClientFactory<ServiceBusSender> _serviceBusSender;
+    private readonly IAzureClientFactory<QueueClient> _queueClientFactory;
 
-    public ServiceBusService(IAzureClientFactory<ServiceBusSender> serviceBusSender)
+    public ServiceBusService(IAzureClientFactory<QueueClient> queueClientFactory)
     {
-        this._serviceBusSender = serviceBusSender;
+        this._queueClientFactory = queueClientFactory;
     }
 
     public async Task SendMessageAsync(string queueOrTopicName, string message, string correlationId, IDictionary<string, object>? messageProperties = null, CancellationToken cancellationToken = default)
     {
-        var serviceBusSender = this._serviceBusSender.CreateClient(queueOrTopicName);
-        var serviceBusMessage = new ServiceBusMessage(message);
+        // Resolve the specific queue client from the factory
+        var queueClient = this._queueClientFactory.CreateClient(queueOrTopicName);
 
-        if(!string.IsNullOrEmpty(correlationId))
+        // Ensure the queue actually exists in your local Azurite emulator
+        await queueClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        // Because Azurite (Storage Queues) does not support native CorrelationId or ApplicationProperties,
+        // we wrap your data into an anonymous JSON object so no information is lost.
+        var azuritePayload = new
         {
-            serviceBusMessage.CorrelationId = correlationId;
-        }
+            CorrelationId = correlationId,
+            Properties = messageProperties,
+            MessageBody = message
+        };
 
-        if(messageProperties != null)
-        {
-            foreach (var property in messageProperties)
-            {
-                serviceBusMessage.ApplicationProperties.Add(property.Key, property.Value);
-            }
-        }
+        string serializedPayload = JsonSerializer.Serialize(azuritePayload);
 
-        await serviceBusSender.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
+        // Send the JSON string to Azurite
+        await queueClient.SendMessageAsync(serializedPayload, cancellationToken).ConfigureAwait(false);
     }
 }

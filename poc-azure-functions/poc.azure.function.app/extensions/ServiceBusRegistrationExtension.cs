@@ -1,4 +1,4 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using Azure.Storage.Queues; // 1. Switched from Azure.Messaging.ServiceBus to Azure.Storage.Queues
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +12,7 @@ public static class ServiceBusRegistrationExtension
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // 1. Centralize all your queue and topic names here
+        // 1. Centralize all your queue names here (Note: Azurite does not support topics)
         string[] serviceBusEntities = new[]
         {
             "sbq-dev",
@@ -21,19 +21,20 @@ public static class ServiceBusRegistrationExtension
 
         services.AddAzureClients(clientBuilder =>
         {
-            // 2. Register the single underlying client connection pool
+            // 2. Register the single underlying client connection pool for Storage Queues
             string connectionString = configuration["StorageQueueConnectionString"]!;
-            clientBuilder.AddServiceBusClient(connectionString);
+            clientBuilder.AddQueueServiceClient(connectionString); // Switched to AddQueueServiceClient
 
-            // 3. Loop through your list and register a named sender for each entity
+            // 3. Loop through your list and register a named QueueClient for each entity
             foreach (string entityName in serviceBusEntities)
             {
-                clientBuilder.AddClient<ServiceBusSender, ServiceBusClientOptions>((_, _, provider) =>
+                clientBuilder.AddClient<QueueClient, QueueClientOptions>((_, _, provider) =>
                 {
-                    var client = provider.GetRequiredService<ServiceBusClient>();
-                    return client.CreateSender(entityName);
+                    // Resolve the top-level QueueServiceClient and create a specific QueueClient from it
+                    var serviceClient = provider.GetRequiredService<QueueServiceClient>();
+                    return serviceClient.GetQueueClient(entityName);
                 })
-                // CRITICAL: We name the registered client using the exact queue/topic name
+                // CRITICAL: We name the registered client using the exact queue name
                 .WithName(entityName);
             }
         });
