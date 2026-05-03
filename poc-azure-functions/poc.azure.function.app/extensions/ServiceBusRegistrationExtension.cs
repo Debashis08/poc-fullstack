@@ -12,11 +12,21 @@ public static class ServiceBusRegistrationExtension
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        RegisterServiceBusQueueOrTopics(services, configuration);
+
+        // Register your custom wrapper service
+        services.AddScoped<IServiceBusService, ServiceBusService>();
+
+        return services;
+    }
+
+    private static void RegisterServiceBusQueueOrTopics(IServiceCollection services, IConfiguration configuration)
+    {
         // 1. Centralize all your queue names here (Note: Azurite does not support topics)
         string[] serviceBusEntities = new[]
         {
-            "sbq-dev",
-            "sbq-test"
+            Constants.AZURITE_LOCAL_DEV_QUEUE_NAME,
+            Constants.AZURITE_LOCAL_TEST_QUEUE_NAME
         };
 
         services.AddAzureClients(clientBuilder =>
@@ -38,10 +48,5 @@ public static class ServiceBusRegistrationExtension
                 .WithName(entityName);
             }
         });
-
-        // Register your custom wrapper service
-        services.AddScoped<IServiceBusService, ServiceBusService>();
-
-        return services;
     }
 }

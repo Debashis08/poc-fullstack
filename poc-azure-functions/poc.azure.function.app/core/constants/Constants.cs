@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace poc.azure.function.app;
 
-namespace poc.azure.function.app;
-
-public class Constants
+public static class Constants
 {
-
+    public readonly static string AZURITE_LOCAL_DEV_QUEUE_NAME = "sbq-dev";
+    public readonly static string AZURITE_LOCAL_TEST_QUEUE_NAME = "sbq-test";
 }
