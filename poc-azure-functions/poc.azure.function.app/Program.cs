@@ -1,5 +1,6 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -14,14 +15,16 @@ public class Program
         builder.ConfigureFunctionsWebApplication();
 
         // Application Insights (Default)
-        builder.Services
-            .AddApplicationInsightsTelemetryWorkerService()
-            .ConfigureFunctionsApplicationInsights();
+        //builder.Services
+        //    .AddApplicationInsightsTelemetryWorkerService()
+        //    .ConfigureFunctionsApplicationInsights();
 
-        // 1. Register Entity Framework Core DbContext
-        //var connectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
-        //builder.Services.AddDbContext<AppDbContext>(options =>
-        //    options.UseSqlServer(connectionString));
+        // Register Entity Framework Core DbContext
+        builder.Services.AddDbContext<AppDbContext>(options =>
+        {
+            var sqlDbConnectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
+            options.UseSqlServer(sqlDbConnectionString);
+        });
 
         // 2. Register all Messaging Clients and Infrastructure Services (Using your custom extension)
         builder.Services.AddServiceBusInfrastructure(builder.Configuration);
