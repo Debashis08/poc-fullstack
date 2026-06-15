@@ -3,48 +3,49 @@ trigger:
     include:
       - main
       - release/*
-      - features/*
+      - feature/*
   paths:
     include:
-      - src/*
-      - azure-pipelines/*
+      # Updated to reflect the monorepo structure
+      - poc-azure-functions/src/*
+      - poc-azure-functions/azure-pipelines/*
 
 variables:
-  # Replace with your actual Azure Resource Manager Service Connection name
   azureSubscription: 'AzureFreeTrialConnection'
-  # Replace with the exact name of your Function App in Azure
   functionAppName: 'func-fullstack-poc-dev'
   buildConfiguration: 'Release'
-  vmImageName: 'windows-latest'
 
-pool:
-  vmImage: 'Default'
+# Using your local self-hosted agent
+pool: 'Default'
 
 steps:
 - task: UseDotNet@2
   displayName: 'Install .NET SDK'
   inputs:
     packageType: 'sdk'
-    version: '10.x' # Matches your .NET 10 setup
+    version: '10.x'
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    projects: 'src/**/*.csproj'
+    # Updated path
+    projects: 'poc-azure-functions/src/**/*.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Function App'
   inputs:
     command: 'build'
-    projects: 'src/poc.azure.function.app/poc.azure.function.app.csproj'
+    # Updated path
+    projects: 'poc-azure-functions/src/poc.azure.function.app/poc.azure.function.app.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'Run xUnit Tests'
   inputs:
     command: 'test'
-    projects: 'src/poc.azure.function.test/poc.azure.function.test.csproj'
+    # Updated path
+    projects: 'poc-azure-functions/src/poc.azure.function.test/poc.azure.function.test.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
@@ -52,7 +53,8 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: 'src/poc.azure.function.app/poc.azure.function.app.csproj'
+    # Updated path
+    projects: 'poc-azure-functions/src/poc.azure.function.app/poc.azure.function.app.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
 
