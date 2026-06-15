@@ -74,3 +74,8 @@ secrets.json
 *.tmp
 *.bak
 *.swp
+
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+terraform.tfstate
