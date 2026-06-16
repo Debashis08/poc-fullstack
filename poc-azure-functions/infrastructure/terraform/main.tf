@@ -1,13 +1,13 @@
 # 1. Create a Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "rg-fullstack-poc-dev"
-  location = "East US" # Feel free to change to your closest region
+  location = "South India"
 }
 
 # 2. Create a globally unique Storage Account
 resource "random_integer" "ri" {
-  min = 10000
-  max = 99999
+  min = 20000
+  max = 89999
 }
 
 resource "azurerm_storage_account" "sa" {
