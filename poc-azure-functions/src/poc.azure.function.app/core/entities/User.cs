@@ -11,8 +11,11 @@ public class User
     public int Id { get; set; }
 
     [JsonPropertyName("userName")]
-    public string UserName { get; set; }
+    public string UserName { get; set; } = default!;
 
     [JsonPropertyName("email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = default!;
+
+    [JsonPropertyName("passwordHash")]
+    public string PasswordHash { get; set; } = default!;
 }

@@ -1,8 +1,10 @@
+using System;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 
 namespace poc.azure.function.app;
 
@@ -14,14 +16,10 @@ public class Program
 
         builder.ConfigureFunctionsWebApplication();
 
-        // Application Insights (Default)
-        //builder.Services
-        //    .AddApplicationInsightsTelemetryWorkerService()
-        //    .ConfigureFunctionsApplicationInsights();
-
-        // Register Entity Framework Core DbContext
+        // 1. Register Entity Framework Core DbContext
         builder.Services.AddDbContext<AppDbContext>(options =>
         {
+            // This automatically pulls from local.settings.json (Values:SqlConnectionString) when running locally
             var sqlDbConnectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
             options.UseSqlServer(sqlDbConnectionString);
         });
