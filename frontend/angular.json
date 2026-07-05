@@ -3,36 +3,34 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": false
+    "analytics": "17fef6f7-e625-441f-9bdf-35efd74fe105"
   },
   "newProjectRoot": "projects",
   "projects": {
-    "poc-angular": {
+    "storefront-app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/storefront-app",
+      "sourceRoot": "projects/storefront-app/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
+            "browser": "projects/storefront-app/src/main.ts",
+            "tsConfig": "projects/storefront-app/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/storefront-app/public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["projects/storefront-app/src/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -62,10 +60,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "poc-angular:build:production"
+              "buildTarget": "storefront-app:build:production"
             },
             "development": {
-              "buildTarget": "poc-angular:build:development"
+              "buildTarget": "storefront-app:build:development"
             }
           },
           "defaultConfiguration": "development"
