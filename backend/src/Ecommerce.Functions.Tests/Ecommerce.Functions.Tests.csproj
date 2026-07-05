@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Poc.Ecommerce.Functions\Poc.Ecommerce.Functions.csproj" />
+    <ProjectReference Include="..\Ecommerce.Functions\Ecommerce.Functions.csproj" />
   </ItemGroup>
 
 </Project>

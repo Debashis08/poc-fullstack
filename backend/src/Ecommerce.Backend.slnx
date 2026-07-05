@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Ecommerce.Functions.Tests/Ecommerce.Functions.Tests.csproj" />
+  <Project Path="Ecommerce.Functions/Ecommerce.Functions.csproj" />
+</Solution>

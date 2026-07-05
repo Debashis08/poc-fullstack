@@ -1,4 +1,4 @@
-﻿namespace Poc.Ecommerce.Functions.Tests;
+﻿namespace Ecommerce.Functions.Tests;
 
 public class UnitTest1
 {

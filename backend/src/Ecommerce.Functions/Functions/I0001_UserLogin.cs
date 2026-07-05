@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Poc.Ecommerce.Functions.Functions;
+namespace Ecommerce.Functions.Functions;
 
 public class I0001_UserLogin
 {
@@ -14,7 +14,7 @@ public class I0001_UserLogin
         _logger = logger;
     }
 
-    [Function("Function")]
+    [Function("I0001_UserLogin")]
     public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");

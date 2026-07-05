@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="Poc.Ecommerce.Functions.Tests/Poc.Ecommerce.Functions.Tests.csproj" />
-  <Project Path="Poc.Ecommerce.Functions/Poc.Ecommerce.Functions.csproj" />
-</Solution>
