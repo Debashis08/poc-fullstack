@@ -12,6 +12,10 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
+        },
+        "@schematics/angular:service": {
+          "skipTests": true,
+          "path": "projects/storefront-app/src/app/services"
         }
       },
       "root": "projects/storefront-app",
