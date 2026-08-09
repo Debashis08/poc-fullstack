@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { UserLogin } from '../services/user-login';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,9 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('storefront-app');
+  userLogin: UserLogin;
+
+  constructor() {
+    this.userLogin = inject(UserLogin);
+  }
 }
