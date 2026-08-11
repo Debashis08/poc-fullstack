@@ -1,6 +1,6 @@
-CREATE TABLE [dbo].[tbl_users] (
+CREATE TABLE [dbo].[tbl_customers] (
     [Id] INT IDENTITY(1,1) PRIMARY KEY,
-    [Username] NVARCHAR(50) NOT NULL UNIQUE,
+    [Name] NVARCHAR(50) NOT NULL UNIQUE,
     [Email] NVARCHAR(100) NOT NULL UNIQUE,
     [PasswordHash] NVARCHAR(256) NOT NULL
 );
