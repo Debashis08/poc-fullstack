@@ -30,7 +30,7 @@ public class I0001_CustomerLogin
 
         if (!validationResult.IsValid)
         {
-            return new BadRequestObjectResult($"Invalid Request Body - {string.Join(' | ', validationResult.Errors)}");
+            return new BadRequestObjectResult($"Invalid Request Body - {string.Join('|', validationResult.Errors)}");
         }
 
         _logger.LogTrace($"{nameof(I0001_CustomerLogin)} - {nameof(ProcessRequest)} - finished");
