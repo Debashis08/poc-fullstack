@@ -44,6 +44,7 @@ resource "azurerm_windows_function_app" "func" {
   }
 
   app_settings = {
+    "WEBSITE_RUN_FROM_PACKAGE" = "1"
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet-isolated"
     "AzureWebJobsStorage"      = azurerm_storage_account.sa.primary_connection_string
 
