@@ -24,6 +24,7 @@ public class I0001_CustomerLogin
     public async Task<HttpResponseData> ProcessRequest([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogTrace($"{nameof(I0001_CustomerLogin)} - {nameof(ProcessRequest)} - started");
+        _logger.LogInformation($"{nameof(I0001_CustomerLogin)} - {nameof(ProcessRequest)} - started");
 
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync(cancellationToken).ConfigureAwait(false);
         var customer = JsonSerializer.Deserialize<Customer>(requestBody);
@@ -43,6 +44,8 @@ public class I0001_CustomerLogin
             StatusCode = HttpStatusCode.OK,
             Content = new StringContent("{\r\n    \"name\": \"debashis\",\r\n    \"email\": \"debashisnandi@gmail.com\",\r\n    \"passwordHash\": \"87246358hhwsdfy39ther\"\r\n}")
         };
+        _logger.LogTrace($"{nameof(I0001_CustomerLogin)} - {nameof(ProcessRequest)} - finished");
+        _logger.LogInformation($"{nameof(I0001_CustomerLogin)} - {nameof(ProcessRequest)} - finished");
 
         return await CoreUtils.ToHttpResponseDataAsync(req, response).ConfigureAwait(false);
     }
