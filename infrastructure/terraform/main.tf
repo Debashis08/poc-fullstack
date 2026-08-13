@@ -24,12 +24,12 @@ resource "azurerm_service_plan" "asp" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   os_type             = "Windows"
-  sku_name            = "Y1" # Y1 is the dynamic Consumption tier
+  sku_name            = "Y1" 
 }
 
 # 4. Create the actual Function App
 resource "azurerm_windows_function_app" "func" {
-  name                       = "func-fullstack-poc-dev" # EXACTLY matches your YAML variable
+  name                       = "func-fullstack-poc-dev" 
   resource_group_name        = azurerm_resource_group.rg.name
   location                   = azurerm_resource_group.rg.location
   service_plan_id            = azurerm_service_plan.asp.id
@@ -39,7 +39,22 @@ resource "azurerm_windows_function_app" "func" {
   site_config {
     application_stack {
       use_dotnet_isolated_runtime = true
-      dotnet_version              = "v8.0" # Azure officially supports v8.0 for isolated workers right now
+      dotnet_version              = "v10.0" # Updated to reflect your .NET 10 setup
     }
+  }
+
+  app_settings = {
+    "FUNCTIONS_WORKER_RUNTIME" = "dotnet-isolated"
+    "AzureWebJobsStorage"      = azurerm_storage_account.sa.primary_connection_string
+
+    # Global Muzzle: Hide standard noisy host logs
+    "AzureFunctionsJobHost__logging__logLevel__default"                          = "Warning"
+    "AzureFunctionsJobHost__logging__logLevel__Host.Results"                     = "Warning"
+    "AzureFunctionsJobHost__logging__logLevel__Function"                         = "Warning"
+    "AzureFunctionsJobHost__logging__logLevel__Microsoft"                        = "Warning"
+    "AzureFunctionsJobHost__logging__logLevel__Microsoft.Azure.Functions.Worker" = "Warning"
+
+    # VIP Pass: Allow your custom namespace to log Information
+    "AzureFunctionsJobHost__logging__logLevel__Ecommerce.Functions"              = "Information"
   }
 }
