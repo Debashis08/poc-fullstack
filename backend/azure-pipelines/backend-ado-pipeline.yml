@@ -6,9 +6,9 @@ trigger:
       - feature/*
   paths:
     include:
-      # Updated to reflect the monorepo structure
-      - poc-azure-functions/src/*
-      - poc-azure-functions/azure-pipelines/*
+      # Updated to reflect the new structure
+      - src/*
+      - azure-pipelines/*
 
 variables:
   azureSubscription: 'AzureFreeTrialConnection'
@@ -29,32 +29,24 @@ steps:
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    # Updated path
-    projects: 'poc-azure-functions/src/**/*.csproj'
+    projects: 'src/**/*.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Function App'
   inputs:
     command: 'build'
-    # Updated path
-    projects: 'poc-azure-functions/src/poc.azure.function.app/poc.azure.function.app.csproj'
+    projects: 'src/Ecommerce.Functions/Ecommerce.Functions.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Run xUnit Tests'
-  inputs:
-    command: 'test'
-    # Updated path
-    projects: 'poc-azure-functions/src/poc.azure.function.test/poc.azure.function.test.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+# Note: The test task was removed because a test project is absent from your current tree. 
+# Re-add it pointing to 'src/**/*.Test.csproj' when you scaffold your xUnit project.
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish the Function App'
   inputs:
     command: 'publish'
     publishWebProjects: false
-    # Updated path
-    projects: 'poc-azure-functions/src/poc.azure.function.app/poc.azure.function.app.csproj'
+    projects: 'src/Ecommerce.Functions/Ecommerce.Functions.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
 
