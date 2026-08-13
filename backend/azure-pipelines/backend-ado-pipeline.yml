@@ -6,9 +6,9 @@ trigger:
       - feature/*
   paths:
     include:
-      # Updated to reflect the new structure
-      - src/*
-      - azure-pipelines/*
+      # Scoped to the backend directory
+      - backend/src/*
+      - backend/azure-pipelines/*
 
 variables:
   azureSubscription: 'AzureFreeTrialConnection'
@@ -29,14 +29,21 @@ steps:
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    # Prefixed with the monorepo folder name
-    projects: 'poc-azure-functions/src/**/*.csproj' 
+    # Updated to reflect backend/src
+    projects: 'backend/src/**/*.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Function App'
   inputs:
     command: 'build'
-    projects: 'poc-azure-functions/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
+    projects: 'backend/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run xUnit Tests'
+  inputs:
+    command: 'test'
+    projects: 'backend/src/Ecommerce.Functions.Tests/Ecommerce.Functions.Tests.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
@@ -44,7 +51,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: 'poc-azure-functions/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
+    projects: 'backend/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
 
