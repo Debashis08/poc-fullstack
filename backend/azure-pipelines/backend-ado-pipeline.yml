@@ -29,24 +29,22 @@ steps:
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    projects: 'src/**/*.csproj'
+    # Prefixed with the monorepo folder name
+    projects: 'poc-azure-functions/src/**/*.csproj' 
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Function App'
   inputs:
     command: 'build'
-    projects: 'src/Ecommerce.Functions/Ecommerce.Functions.csproj'
+    projects: 'poc-azure-functions/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
     arguments: '--configuration $(buildConfiguration)'
-
-# Note: The test task was removed because a test project is absent from your current tree. 
-# Re-add it pointing to 'src/**/*.Test.csproj' when you scaffold your xUnit project.
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish the Function App'
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: 'src/Ecommerce.Functions/Ecommerce.Functions.csproj'
+    projects: 'poc-azure-functions/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
 
