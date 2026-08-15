@@ -11,7 +11,8 @@ resource "random_integer" "ri" {
 }
 
 resource "azurerm_storage_account" "sa" {
-  name                     = "stfuncpocdev${random_integer.ri.result}"
+  # name                     = "stfuncpocdev${random_integer.ri.result}"
+  name                     = "stfuncpocdev20230821"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -29,7 +30,8 @@ resource "azurerm_service_plan" "asp" {
 
 # 4. Create the actual Function App
 resource "azurerm_windows_function_app" "func" {
-  name                       = "func-fullstack-poc-dev" 
+  # name                       = "func-poc-dev-${random_integer.ri.result}"
+  name                       = "func-poc-dev-20230821"
   resource_group_name        = azurerm_resource_group.rg.name
   location                   = azurerm_resource_group.rg.location
   service_plan_id            = azurerm_service_plan.asp.id
@@ -39,12 +41,12 @@ resource "azurerm_windows_function_app" "func" {
   site_config {
     application_stack {
       use_dotnet_isolated_runtime = true
-      dotnet_version              = "v10.0" # Updated to reflect your .NET 10 setup
+      dotnet_version              = "v10.0" 
     }
   }
 
   app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE" = "1"
+    # Notice: WEBSITE_RUN_FROM_PACKAGE is completely removed from here
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet-isolated"
     "AzureWebJobsStorage"      = azurerm_storage_account.sa.primary_connection_string
 
@@ -57,5 +59,12 @@ resource "azurerm_windows_function_app" "func" {
 
     # VIP Pass: Allow your custom namespace to log Information
     "AzureFunctionsJobHost__logging__logLevel__Ecommerce.Functions"              = "Information"
+  }
+
+  # Tell Terraform to ignore changes made by Azure DevOps
+  lifecycle {
+    ignore_changes = [
+      app_settings["WEBSITE_RUN_FROM_PACKAGE"]
+    ]
   }
 }
