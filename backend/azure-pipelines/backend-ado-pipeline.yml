@@ -12,7 +12,7 @@ trigger:
 
 variables:
   azureSubscription: 'AzureFreeTrialConnection'
-  functionAppName: 'func-fullstack-poc-dev'
+  functionAppName: 'func-poc-dev-ind-71461'
   buildConfiguration: 'Release'
 
 # Using your local self-hosted agent
