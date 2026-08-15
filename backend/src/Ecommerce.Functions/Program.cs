@@ -23,4 +23,4 @@ builder.Services.RegisterConfigurations(builder.Configuration);
 builder.Services.RegisterServices(builder.Configuration);
 
 // 5. Build and run the host
-builder.Build().Run();
+await builder.Build().RunAsync();
