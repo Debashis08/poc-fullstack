@@ -38,11 +38,11 @@ yarn-debug.log*
 yarn-error.log*
 
 # Angular build output and cache
-/poc-angular/dist/
-/poc-angular/tmp/
-/poc-angular/out-tsc/
-/poc-angular/bazel-out/
-/poc-angular/.angular/
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/bazel-out/
+/frontend/.angular/
 
 # ==========================================
 # .NET / Azure Functions (poc-azure-functions)
@@ -54,6 +54,8 @@ yarn-error.log*
 # Azure Functions Local Settings (CRITICAL: Prevents committing secrets)
 local.settings.json
 secrets.json
+
+Properties/
 
 # Azure Functions Core Tools
 .funcignore
@@ -74,3 +76,9 @@ secrets.json
 *.tmp
 *.bak
 *.swp
+
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+terraform.tfstate
+terraform.tfstate.backup
