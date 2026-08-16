@@ -1,0 +1,64 @@
+trigger:
+  branches:
+    include:
+      - main
+      - release/*
+      - feature/*
+  paths:
+    include:
+      # Scoped to the backend directory
+      - backend/src/*
+      - backend/azure-pipelines/*
+
+variables:
+  azureSubscription: 'AzureFreeTrialConnection'
+  functionAppName: 'func-poc-dev-ind-71461'
+  buildConfiguration: 'Release'
+
+# Using your local self-hosted agent
+pool: 'Default'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '10.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet Packages'
+  inputs:
+    command: 'restore'
+    # Updated to reflect backend/src
+    projects: 'backend/src/**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build the Function App'
+  inputs:
+    command: 'build'
+    projects: 'backend/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run xUnit Tests'
+  inputs:
+    command: 'test'
+    projects: 'backend/src/Ecommerce.Functions.Tests/Ecommerce.Functions.Tests.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish the Function App'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'backend/src/Ecommerce.Functions/Ecommerce.Functions.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+
+- task: AzureFunctionApp@2
+  displayName: 'Deploy to Azure Functions'
+  inputs:
+    connectedServiceNameARM: '$(azureSubscription)'
+    appType: 'functionApp'
+    appName: '$(functionAppName)'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
