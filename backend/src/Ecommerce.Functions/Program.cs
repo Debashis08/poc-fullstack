@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 // 1. Initialize the application builder
 var builder = FunctionsApplication.CreateBuilder(args);
 builder.Logging.AddFilter("Microsoft.Azure.Functions.Worker", LogLevel.Warning);
+builder.Logging.AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Warning);
+builder.Logging.AddFilter("Microsoft.AspNetCore.Routing.EndpointMiddleware", LogLevel.Warning);
 
 // Register all FluentValidators found in the current assembly
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
