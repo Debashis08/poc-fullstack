@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 // 1. Initialize the application builder
 var builder = FunctionsApplication.CreateBuilder(args);
 builder.Logging.AddFilter("Microsoft.Azure.Functions.Worker", LogLevel.Warning);
+builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft.AspNetCore.Routing.EndpointMiddleware", LogLevel.Warning);
 
