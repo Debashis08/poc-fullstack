@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
 
-namespace Ecommerce.Functions.Functions;
+namespace Ecommerce.Functions;
 
 public class I0001_CustomerLogin
 {
@@ -21,7 +21,7 @@ public class I0001_CustomerLogin
     }
 
     [Function("CustomerLogin")]
-    public async Task<HttpResponseData> ProcessRequest([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, CancellationToken cancellationToken)
+    public async Task<HttpResponseData> ProcessRequest([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogTrace($"{nameof(I0001_CustomerLogin)} - {nameof(ProcessRequest)} - started");
         _logger.LogInformation($"{nameof(I0001_CustomerLogin)} - {nameof(ProcessRequest)} - started");

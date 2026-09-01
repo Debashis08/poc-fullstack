@@ -9,6 +9,10 @@ using Microsoft.Extensions.Logging;
 
 // 1. Initialize the application builder
 var builder = FunctionsApplication.CreateBuilder(args);
+
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Logging.AddConsole();
+
 builder.Logging.AddFilter("Microsoft.Azure.Functions.Worker", LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Warning);
@@ -21,9 +25,11 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.ConfigureFunctionsWebApplication();
 
 // 3. Configure built-in Azure logging/telemetry
+#if RELEASE
 builder.Services.AddOpenTelemetry()
     .UseFunctionsWorkerDefaults()
     .UseAzureMonitorExporter();
+# endif
 
 // 4. Delegate all custom dependency injection to a separate method
 builder.Services.RegisterConfigurations(builder.Configuration);
