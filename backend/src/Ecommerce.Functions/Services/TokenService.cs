@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,7 +11,7 @@ public class TokenService : ITokenService
     private readonly JwtOptions _jwtSettings;
     public TokenService(IOptions<JwtOptions> jwtSettings)
     {
-        this._jwtSettings=jwtSettings.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
+        this._jwtSettings = jwtSettings.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
     public string GenerateToken(Customer customer)
     {
