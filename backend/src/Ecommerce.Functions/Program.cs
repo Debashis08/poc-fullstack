@@ -33,7 +33,7 @@ builder.Services.AddOpenTelemetry()
 
 // 4. Delegate all custom dependency injection to a separate method
 builder.Services.RegisterConfigurations(builder.Configuration);
-builder.Services.RegisterServices(builder.Configuration);
+builder.Services.RegisterIntegrationsAndServices(builder.Configuration);
 
 // 5. Build and run the host
 await builder.Build().RunAsync();

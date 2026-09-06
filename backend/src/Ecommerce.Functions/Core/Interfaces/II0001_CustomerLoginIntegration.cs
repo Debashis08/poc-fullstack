@@ -2,5 +2,5 @@
 
 public interface II0001_CustomerLoginIntegration
 {
-    public string ProcessCustomerLogin(Customer customer);
+    public Task<string> ProcessCustomerLogin(Customer customer);
 }
