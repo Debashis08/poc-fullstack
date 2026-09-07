@@ -1,15 +1,22 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Ecommerce.Functions;
+﻿namespace Ecommerce.Functions;
 
 public class Customer
 {
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public long CustomerId { get; set; } = default!;
 
-    [JsonPropertyName("email")]
-    public string? Email { get; set; }
+    public string? Email { get; set; } = default!;
 
-    [JsonPropertyName("passwordHash")]
-    public string? PasswordHash { get; set; }
+    public string? PasswordHash { get; set; } = default!;
+
+    public string? FirstName { get; set; } = default!;
+
+    public string? LastName { get; set; } = default!;
+
+    public string? PhoneNumber { get; set; } = default!;
+
+    public bool IsActive { get; set; } = default!;
+
+    public DateTime? CreatedAt { get; set; } = default!;
+
+    public DateTime? UpdatedAt { get; set; } = default!;
 }

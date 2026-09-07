@@ -17,17 +17,21 @@ public static class ServiceRegistrationExtension
     public static IServiceCollection RegisterIntegrationsAndServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Integrations.
-        services.AddScoped<II0001_CustomerLoginIntegration, I0001_CustomerLoginIntegration>();
+        services.AddScoped<II0001_CustomerSignInIntegration, I0001_CustomerSignInIntegration>();
 
         // Services.
         services.AddDbContext<AppDbContext>(options =>
         {
             var sqlDbConnectionString = configuration.GetSection("SqlConnectionString").Value;
-            options.UseSqlServer(sqlDbConnectionString);
+            options.UseSqlServer(sqlDbConnectionString, sql =>
+            {
+                sql.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(5), errorNumbersToAdd: null);
+                sql.CommandTimeout(30);
+            });
         });
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICustomerService, CustomerService>();
-        services.AddScoped<IPasswordHasher<Customer>, PasswordHasher<Customer>>();
+        services.AddScoped<IPasswordHasher<CustomerSignInRequest>, PasswordHasher<CustomerSignInRequest>>();
 
         return services;
     }

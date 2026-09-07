@@ -2,5 +2,5 @@
 
 public interface ICustomerService
 {
-    public Task<string> GetUserPasswordHashByEmailAsync(string userEmail);
+    public Task<string> GetUserPasswordHashByEmailAsync(string userEmail, CancellationToken cancellationToken = default);
 }

@@ -14,12 +14,32 @@ public class CustomerService : ICustomerService
         _dbContext = dbContext;
     }
 
-    public async Task<string> GetUserPasswordHashByEmailAsync(string userEmail)
+    public async Task<string> GetUserPasswordHashByEmailAsync(string userEmail, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation($"{nameof(CustomerService)} - {nameof(GetUserPasswordHashByEmailAsync)} - started.");
-        var passwordHash=await _dbContext.Customers.Where(customer => customer.Email==userEmail).Select(customer => customer.PasswordHash).FirstOrDefaultAsync();
+
+        var passwordHash = string.Empty;
+        try
+        {
+            passwordHash = await _dbContext.Customers
+                .Where(customer => customer.Email == userEmail)
+                .Select(customer => customer.PasswordHash)
+                .FirstOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _logger.LogError($"{ex.Message}");
+            throw;
+        }
+
+        if (string.IsNullOrEmpty(passwordHash))
+        {
+            throw new UnauthorizedAccessException("No matching user found for the supplied email.");
+        }
+
         _logger.LogInformation($"{nameof(CustomerService)} - {nameof(GetUserPasswordHashByEmailAsync)} - completed.");
 
-        return passwordHash!;
+        return passwordHash;
     }
 }

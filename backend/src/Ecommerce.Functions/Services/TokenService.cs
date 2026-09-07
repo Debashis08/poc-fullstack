@@ -13,14 +13,13 @@ public class TokenService : ITokenService
     {
         this._jwtSettings = jwtSettings.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
-    public string GenerateToken(Customer customer)
+    public string GenerateToken(CustomerSignInRequest customer)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-                new Claim(JwtRegisteredClaimNames.Sub, customer.Name!),
                 new Claim(JwtRegisteredClaimNames.Email, customer.Email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

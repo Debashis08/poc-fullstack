@@ -20,8 +20,17 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _logger.LogInformation($"{nameof(AppDbContext)} - {nameof(OnModelCreating)} - started.");
-        _logger.LogInformation($"customer sqldb table name {_sqlDbSettings.SqlDbCustomerTableName}");
-        modelBuilder.Entity<Customer>().ToTable(_sqlDbSettings.SqlDbCustomerTableName);
+
+        modelBuilder.Entity<Customer>(entity =>
+        {
+            entity.HasKey(customer => customer.CustomerId);
+            entity.ToTable(_sqlDbSettings.SqlDbCustomerTableName);
+        });
+
+
+
+
+
         _logger.LogInformation($"{nameof(AppDbContext)} - {nameof(OnModelCreating)} - completed.");
     }
 }
