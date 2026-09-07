@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Ecommerce.Functions;
 
-public class I0001_CustomerLoginIntegration : II0001_CustomerLoginIntegration
+public class SqlDbOptions
 {
-
+    public string? SqlDbCustomerTableName { get; set; } = default!;
 }

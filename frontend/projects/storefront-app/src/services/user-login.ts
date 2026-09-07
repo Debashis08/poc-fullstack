@@ -7,11 +7,16 @@ import { HttpClient } from '@angular/common/http';
 export class UserLogin {
   private _isLoggedIn: boolean = false;
   private httpclient = inject(HttpClient);
-  private url: string = 'http://localhost:7048/api/I0001_UserLogin';
+  private url: string = 'http://localhost:7048/api/CustomerLogin';
+  private requestBody: any = {
+    "name": "debashis",
+    "email": "debashisnandi@gmail.com",
+    "passwordHash": "87246358hhwsdfy39ther"
+};
 
 
   public sendHttpRequest() {
-    return this.httpclient.get(this.url).subscribe((response) => {
+    return this.httpclient.post(this.url, this.requestBody).subscribe((response) => {
       console.log(response);
     });
 

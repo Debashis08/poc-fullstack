@@ -7,5 +7,5 @@ namespace Ecommerce.Functions;
 
 public interface ITokenService
 {
-    public string GenerateToken(Customer customer);
+    public string GenerateToken(CustomerSignInRequest customer);
 }
