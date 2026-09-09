@@ -17,7 +17,8 @@ public static class ServiceRegistrationExtension
     public static IServiceCollection RegisterIntegrationsAndServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Integrations.
-        services.AddScoped<II0001_CustomerSignInIntegration, I0001_CustomerSignInIntegration>();
+        services.AddScoped<II0001_1_CustomerSignUpIntegration, I0001_1_CustomerSignUpIntegration>();
+        services.AddScoped<II0001_2_CustomerSignInIntegration, I0001_2_CustomerSignInIntegration>();
 
         // Services.
         services.AddDbContext<AppDbContext>(options =>
@@ -32,6 +33,7 @@ public static class ServiceRegistrationExtension
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IPasswordHasher<CustomerSignInRequest>, PasswordHasher<CustomerSignInRequest>>();
+        services.AddScoped<IPasswordHasher<CustomerSignUpRequest>, PasswordHasher<CustomerSignUpRequest>>();
 
         return services;
     }

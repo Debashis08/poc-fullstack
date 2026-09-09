@@ -7,23 +7,23 @@ using System.Text.Json;
 
 namespace Ecommerce.Functions;
 
-public class I0001_CustomerSignIn
+public class I0001_2_CustomerSignIn
 {
-    private readonly ILogger<I0001_CustomerSignIn> _logger;
-    private readonly II0001_CustomerSignInIntegration _i0001_CustomerSignInIntegration;
-    private readonly IValidator<CustomerSignInRequest> _validator;
+    private readonly ILogger<I0001_2_CustomerSignIn> _logger;
+    private readonly II0001_2_CustomerSignInIntegration _i0001_1_CustomerSignInIntegration;
+    private readonly IValidator<CustomerSignInRequest> _customerSignInValidator;
 
-    public I0001_CustomerSignIn(ILogger<I0001_CustomerSignIn> logger, II0001_CustomerSignInIntegration i0001_CustomerSignInIntegration, IValidator<CustomerSignInRequest> validator)
+    public I0001_2_CustomerSignIn(ILogger<I0001_2_CustomerSignIn> logger, II0001_2_CustomerSignInIntegration i0001_1_CustomerSignInIntegration, IValidator<CustomerSignInRequest> customerSignInValidator)
     {
         _logger = logger;
-        _i0001_CustomerSignInIntegration = i0001_CustomerSignInIntegration;
-        _validator = validator;
+        _i0001_1_CustomerSignInIntegration = i0001_1_CustomerSignInIntegration;
+        _customerSignInValidator = customerSignInValidator;
     }
 
-    [Function("CustomerLogin")]
+    [Function("CustomerSignIn")]
     public async Task<HttpResponseData> ProcessRequest([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(I0001_CustomerSignIn)} - {nameof(ProcessRequest)} - started");
+        _logger.LogInformation($"{nameof(I0001_2_CustomerSignIn)} - {nameof(ProcessRequest)} - started");
         var response = new HttpResponseMessage();
 
         try
@@ -31,7 +31,7 @@ public class I0001_CustomerSignIn
             var requestBody = await new StreamReader(request.Body).ReadToEndAsync(cancellationToken).ConfigureAwait(false);
             var customer = JsonSerializer.Deserialize<CustomerSignInRequest>(requestBody);
 
-            var validationResult = await _validator.ValidateAsync(customer!, cancellationToken).ConfigureAwait(false);
+            var validationResult = await _customerSignInValidator.ValidateAsync(customer!, cancellationToken).ConfigureAwait(false);
             if (!validationResult.IsValid)
             {
                 response = new HttpResponseMessage()
@@ -43,14 +43,17 @@ public class I0001_CustomerSignIn
                 return await CoreUtils.ToHttpResponseDataAsync(request, response).ConfigureAwait(false);
             }
 
-            var result = await _i0001_CustomerSignInIntegration.ProcessCustomerSignIn(customer!, cancellationToken).ConfigureAwait(false);
+            var tokenResponse = await _i0001_1_CustomerSignInIntegration.ProcessCustomerSignIn(customer!, cancellationToken).ConfigureAwait(false);
             response = new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent($"{result}")
+                Content = new StringContent($"User Signin Successfull."),
             };
 
-            _logger.LogInformation($"{nameof(I0001_CustomerSignIn)} - {nameof(ProcessRequest)} - finished");
+            response.Headers.Add("AccessToken", tokenResponse.AccessToken);
+            response.Headers.Add("RefreshToken", tokenResponse.RefreshToken);
+
+            _logger.LogInformation($"{nameof(I0001_2_CustomerSignIn)} - {nameof(ProcessRequest)} - finished");
 
             return await CoreUtils.ToHttpResponseDataAsync(request, response).ConfigureAwait(false);
         }

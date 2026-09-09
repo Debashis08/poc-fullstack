@@ -7,5 +7,6 @@ namespace Ecommerce.Functions;
 
 public interface ITokenService
 {
-    public string GenerateToken(CustomerSignInRequest customer);
+    public TokenResponse GenerateTokens(CustomerRequest customer);
+    public string HashRefreshToken(string refreshToken);
 }

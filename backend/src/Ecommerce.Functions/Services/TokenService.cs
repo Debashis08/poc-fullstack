@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Ecommerce.Functions;
@@ -13,7 +14,36 @@ public class TokenService : ITokenService
     {
         this._jwtSettings = jwtSettings.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
-    public string GenerateToken(CustomerSignInRequest customer)
+
+    public TokenResponse GenerateTokens(CustomerRequest customer)
+    {
+        var accessToken = GenerateAccessToken(customer);
+
+        var refreshToken = GenerateRefreshToken();
+
+        return new TokenResponse()
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            AccessTokenExpiresAt =
+                DateTime.UtcNow.AddMinutes(
+                    _jwtSettings.AccessTokenExpirationMinutes),
+
+            RefreshTokenExpiresAt =
+                DateTime.UtcNow.AddDays(
+                    _jwtSettings.RefreshTokenExpirationDays)
+        };
+    }
+
+    public string HashRefreshToken(string refreshToken)
+    {
+        var bytes = SHA256.HashData(
+            Encoding.UTF8.GetBytes(refreshToken));
+
+        return Convert.ToBase64String(bytes);
+    }
+
+    private string GenerateAccessToken(CustomerRequest customer)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -34,4 +64,12 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    private static string GenerateRefreshToken()
+    {
+        var randomBytes = RandomNumberGenerator.GetBytes(64);
+
+        return Convert.ToBase64String(randomBytes);
+    }
+
 }

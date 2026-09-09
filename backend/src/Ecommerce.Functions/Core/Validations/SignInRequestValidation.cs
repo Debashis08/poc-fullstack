@@ -2,9 +2,9 @@
 
 namespace Ecommerce.Functions;
 
-public class LoginRequestValidation : AbstractValidator<CustomerSignInRequest>
+public class SignInRequestValidation : AbstractValidator<CustomerSignInRequest>
 {
-    public LoginRequestValidation()
+    public SignInRequestValidation()
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is a required field.")

@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     }
     
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<CustomerRefreshToken> CustomerRefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,8 +28,20 @@ public class AppDbContext : DbContext
             entity.ToTable(_sqlDbSettings.SqlDbCustomerTableName);
         });
 
+        modelBuilder.Entity<CustomerRefreshToken>(entity =>
+        {
+            entity.HasKey(key => key.RefreshTokenId);
+            entity.ToTable(_sqlDbSettings.SqlDbCustomerRefreshTokenTableName);
 
+            // Enforce Unique Constraint for Single Device Login
+            entity.HasIndex(e => e.CustomerId)
+                  .IsUnique()
+                  .HasDatabaseName("UQ_tbl_customer_refresh_tokens_CustomerId");
 
+            // Set Default Value for CreatedAt
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql("SYSUTCDATETIME()");
+        });
 
 
         _logger.LogInformation($"{nameof(AppDbContext)} - {nameof(OnModelCreating)} - completed.");
