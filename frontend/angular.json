@@ -12,7 +12,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "skipTests": true,
-          "path": "src"
+          "path": "projects/storefront-app/src"
         },
         "@schematics/angular:service": {
           "skipTests": true,
